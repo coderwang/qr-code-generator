@@ -7,11 +7,11 @@
 
 1. 在资源管理器或编辑器中右键选择 Generate QR Code
 
-![](./src/assets/demonstrate.gif)
+![](./assets/demonstrate.gif)
 
 2. 通过 shift + command + p 选择 Generate QR Code
 
-![](./src/assets/image.png)
+![](./assets/image.png)
 
 ## 后续计划
 

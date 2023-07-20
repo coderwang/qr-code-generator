@@ -4,6 +4,11 @@
   "description": "Generate QR code in VS Code",
   "version": "1.0.0",
   "publisher": "coderwsh",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coderwang/qr-code-generator"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
