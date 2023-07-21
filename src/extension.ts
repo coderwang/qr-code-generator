@@ -60,8 +60,8 @@ async function generateQRCode(text: string): Promise<string> {
   });
 }
 
-function getWebviewContent(path: string) {
-  const display = path ? 'block' : 'none';
+function getWebviewContent(filePath: string) {
+  const display = filePath ? 'block' : 'none';
   const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5';
   const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5';
   const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5';
@@ -71,12 +71,12 @@ function getWebviewContent(path: string) {
   let qaContainerPath = '';
   let prodPath = '';
   let prodContainerPath = '';
-  if (path) {
-    devPath = devBaseUrl + path.substring(path.indexOf('/mw-loan-h5/src/pages') + 21, path.length - 4);
+  if (filePath) {
+    devPath = devBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
     devContainerPath = 'ymm://view/web?url=' + encodeURIComponent(devPath);
-    qaPath = qaBaseUrl + path.substring(path.indexOf('/mw-loan-h5/src/pages') + 21, path.length - 4);
+    qaPath = qaBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
     qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
-    prodPath = prodBaseUrl + path.substring(path.indexOf('/mw-loan-h5/src/pages') + 21, path.length - 4);
+    prodPath = prodBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
     prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
   }
   return `
