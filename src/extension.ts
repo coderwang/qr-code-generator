@@ -78,6 +78,7 @@ function getWebviewContent(filePath: string) {
 
   let pageTrackName = '';
 
+  // 通过右键打开
   if (filePath) {
     const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
 
@@ -132,6 +133,12 @@ function getWebviewContent(filePath: string) {
           background-color: #960505;
           margin: 20px 0;
         }
+        i {
+          color: #e7dfdf;
+        }
+        span {
+          color: green;
+        }
         input { 
           width: 90%;
           padding: 12px; 
@@ -160,17 +167,19 @@ function getWebviewContent(filePath: string) {
       </style>
     </head>
     <body>
-      <div style="display: ${display}">
+      <div style="display: ${display};margin-bottom: 24px;">
         <div class="base">页面埋点名称: ${pageTrackName}</div>
         <div class="divider"></div>
-        <div class="base dev">dev环境: ${devPath}</div>
-        <div class="base dev">容器地址: ${devContainerPath}</div>
+        <div class="base dev"><i>dev: </i>${devPath}</div>
+        <div class="base qa"><i>qa: </i>${qaPath}</div>
+        <div class="base prod"><i>prod: </i>${prodPath}</div>
         <div class="divider"></div>
-        <div class="base qa">qa环境: ${qaPath}</div>
-        <div class="base qa">容器地址: ${qaContainerPath}</div>
+        <div class="base dev"><i>dev容器: </i>${devContainerPath}</div>
+        <div class="base qa"><i>qa容器: </i>${qaContainerPath}</div>
+        <div class="base prod"><i>prod容器: </i>${prodContainerPath}</div>
         <div class="divider"></div>
-        <div class="base prod">prod环境: ${prodPath}</div>
-        <div class="base prod">容器地址: ${prodContainerPath}</div>
+        <div class="base">若存在query参数请自行拼接</div>
+        <div class="base">query参数转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
       </div>
 
       <input id="urlInput" type="text" placeholder="Enter a URL">
