@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import * as qrcode from 'qrcode';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
   let panel: vscode.WebviewPanel | undefined;
@@ -62,22 +64,46 @@ async function generateQRCode(text: string): Promise<string> {
 
 function getWebviewContent(filePath: string) {
   const display = filePath ? 'block' : 'none';
-  const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5';
-  const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5';
-  const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5';
+
+  const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5/';
+  const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5/';
+  const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5/';
+
   let devPath = '';
   let devContainerPath = '';
   let qaPath = '';
   let qaContainerPath = '';
   let prodPath = '';
   let prodContainerPath = '';
+
+  let pageTrackName = '';
+
   if (filePath) {
-    devPath = devBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
+    const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
+
+    devPath = devBaseUrl + shortPath;
     devContainerPath = 'ymm://view/web?url=' + encodeURIComponent(devPath);
-    qaPath = qaBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
+    qaPath = qaBaseUrl + shortPath;
     qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
-    prodPath = prodBaseUrl + filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 21, filePath.length - 4);
+    prodPath = prodBaseUrl + shortPath;
     prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
+
+    /**
+     * 需要用 workspaceFolders 来读取工作区目录，而不是 __dirname 和 process.cwd()
+     * 需要用 fs 模来读取文件内容，而不是 require 和 import
+     */
+    vscode.workspace.workspaceFolders?.forEach(item => {
+      if (item.name === 'mw-loan-h5') {
+        console.log('进来了');
+        const fileContent = fs.readFileSync(path.resolve(item.uri.path, 'src/assets/js/track/pageMap.ts'), "utf8");
+        if (fileContent.includes(shortPath)) {
+          const regex = new RegExp(`${shortPath}' = '\(\.\*\)'`);
+          pageTrackName = fileContent.match(regex)?.[1] ?? '';
+        } else {
+          pageTrackName = 'loan_h5_' + shortPath.replace(/\//g, '_');
+        }
+      }
+    });
   }
   return `
     <!DOCTYPE html>
@@ -135,6 +161,8 @@ function getWebviewContent(filePath: string) {
     </head>
     <body>
       <div style="display: ${display}">
+        <div class="base">页面埋点名称: ${pageTrackName}</div>
+        <div class="divider"></div>
         <div class="base dev">dev环境: ${devPath}</div>
         <div class="base dev">容器地址: ${devContainerPath}</div>
         <div class="divider"></div>
