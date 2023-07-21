@@ -76,11 +76,14 @@ function getWebviewContent(filePath: string) {
   let prodPath = '';
   let prodContainerPath = '';
 
+  let newRoutePath = '';
+
   let pageTrackName = '';
 
   // 通过右键打开
   if (filePath) {
     const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
+    newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
 
     devPath = devBaseUrl + shortPath;
     devContainerPath = 'ymm://view/web?url=' + encodeURIComponent(devPath);
@@ -117,15 +120,6 @@ function getWebviewContent(filePath: string) {
           line-height: 24px;
           color: #e5c785;
           margin-bottom: 12px;
-        }
-        .dev {
-          
-        }
-        .qa {
-          
-        }
-        .prod {
-          
         }
         .divider {
           height: 2px;
@@ -170,13 +164,14 @@ function getWebviewContent(filePath: string) {
       <div style="display: ${display};margin-bottom: 24px;">
         <div class="base">页面埋点名称: ${pageTrackName}</div>
         <div class="divider"></div>
-        <div class="base dev"><i>dev: </i>${devPath}</div>
-        <div class="base qa"><i>qa: </i>${qaPath}</div>
-        <div class="base prod"><i>prod: </i>${prodPath}</div>
+        <div class="base"><i>dev: </i>${devPath}</div>
+        <div class="base"><i>qa: </i>${qaPath}</div>
+        <div class="base"><i>prod: </i>${prodPath}</div>
+        <div class="base"><i>新版路由: </i>${newRoutePath}</div>
         <div class="divider"></div>
-        <div class="base dev"><i>dev容器: </i>${devContainerPath}</div>
-        <div class="base qa"><i>qa容器: </i>${qaContainerPath}</div>
-        <div class="base prod"><i>prod容器: </i>${prodContainerPath}</div>
+        <div class="base"><i>dev容器: </i>${devContainerPath}</div>
+        <div class="base"><i>qa容器: </i>${qaContainerPath}</div>
+        <div class="base"><i>prod容器: </i>${prodContainerPath}</div>
         <div class="divider"></div>
         <div class="base">若存在query参数请自行拼接</div>
         <div class="base">query参数转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
