@@ -63,10 +63,6 @@ async function generateQRCode(text: string): Promise<string> {
 }
 
 function getWebviewContent(filePath: string) {
-  const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5/';
-  const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5/';
-  const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5/';
-
   let display = 'none';
 
   let devPath = '';
@@ -80,35 +76,39 @@ function getWebviewContent(filePath: string) {
 
   let pageTrackName = '';
 
+  console.log('filePath=====>', filePath);
+
   // 通过右键打开
-  if (filePath && filePath.includes('mw-loan-h5')) {
-    display = 'block';
-    const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
-    newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
+  if (filePath) {
+    if (filePath.includes('mw-loan-h5')) {
+      const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5/';
+      const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5/';
+      const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5/';
 
-    devPath = devBaseUrl + shortPath;
-    devContainerPath = 'ymm://view/web?url=' + encodeURIComponent(devPath);
-    qaPath = qaBaseUrl + shortPath;
-    qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
-    prodPath = prodBaseUrl + shortPath;
-    prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
+      display = 'block';
+      const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
+      
+      // 新版路由地址
+      newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
 
-    /**
-     * 需要用 workspaceFolders 来读取工作区目录，而不是 __dirname 和 process.cwd()
-     * 需要用 fs 模来读取文件内容，而不是 require 和 import
-     */
-    vscode.workspace.workspaceFolders?.forEach(item => {
-      if (item.name === 'mw-loan-h5') {
-        console.log('进来了');
-        const fileContent = fs.readFileSync(path.resolve(item.uri.path, 'src/assets/js/track/pageMap.ts'), "utf8");
-        if (fileContent.includes(shortPath)) {
-          const regex = new RegExp(`${shortPath}' = '\(\.\*\)'`);
-          pageTrackName = fileContent.match(regex)?.[1] ?? '';
-        } else {
-          pageTrackName = 'loan_h5_' + shortPath.replace(/\//g, '_');
-        }
+      // 页面地址以及容器地址
+      devPath = devBaseUrl + shortPath;
+      devContainerPath = 'ymm://view/web?url=' + encodeURIComponent(devPath);
+      qaPath = qaBaseUrl + shortPath;
+      qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
+      prodPath = prodBaseUrl + shortPath;
+      prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
+      
+      // 需要用 fs 模来读取文件内容，而不是 require 和 import
+      const fileContent = fs.readFileSync(path.resolve(filePath.substring(0, filePath.indexOf('/src/pages')), 'src/assets/js/track/pageMap.ts'), "utf8");
+      // 页面埋点路径
+      if (fileContent.includes(shortPath)) {
+        const regex = new RegExp(`${shortPath}' = '\(\.\*\)'`);
+        pageTrackName = fileContent.match(regex)?.[1] ?? '';
+      } else {
+        pageTrackName = 'loan_h5_' + shortPath.replace(/\//g, '_');
       }
-    });
+    }
   }
   return `
     <!DOCTYPE html>
