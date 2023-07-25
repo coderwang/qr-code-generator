@@ -63,11 +63,11 @@ async function generateQRCode(text: string): Promise<string> {
 }
 
 function getWebviewContent(filePath: string) {
-  const display = filePath ? 'block' : 'none';
-
   const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5/';
   const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5/';
   const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5/';
+
+  let display = 'none';
 
   let devPath = '';
   let devContainerPath = '';
@@ -81,7 +81,8 @@ function getWebviewContent(filePath: string) {
   let pageTrackName = '';
 
   // 通过右键打开
-  if (filePath) {
+  if (filePath && filePath.includes('mw-loan-h5')) {
+    display = 'block';
     const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
     newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
 

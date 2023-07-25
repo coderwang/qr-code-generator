@@ -27,14 +27,14 @@
     "menus": {
       "editor/context": [
         {
-          "when": "resourcePath =~ /\\/mw-loan-h5\\/src\\/pages\\// && resourceExtname == .tsx",
+          "when": "resourcePath =~ /\\/src\\/pages\\// && !(resourcePath =~ /\\/components\\//) && resourceExtname == .tsx",
           "command": "extension.generateQRCode",
           "group": "navigation"
         }
       ],
       "explorer/context": [
         {
-          "when": "resourcePath =~ /\\/mw-loan-h5\\/src\\/pages\\// && resourceExtname == .tsx",
+          "when": "resourcePath =~ /\\/src\\/pages\\// && !(resourcePath =~ /\\/components\\//) && resourceExtname == .tsx",
           "command": "extension.generateQRCode",
           "group": "navigation"
         }
