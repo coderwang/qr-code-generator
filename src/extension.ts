@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as qrcode from 'qrcode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { globSync } from 'glob';
 
 export function activate(context: vscode.ExtensionContext) {
   let panel: vscode.WebviewPanel | undefined;
@@ -76,6 +77,8 @@ function getWebviewContent(filePath: string) {
 
   let pageTrackName = '';
 
+  let fileWithQuery = '';
+
   console.log('filePath=====>', filePath);
 
   // 通过右键打开
@@ -87,7 +90,7 @@ function getWebviewContent(filePath: string) {
 
       display = 'block';
       const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
-      
+
       // 新版路由地址
       newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
 
@@ -98,7 +101,7 @@ function getWebviewContent(filePath: string) {
       qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
       prodPath = prodBaseUrl + shortPath;
       prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
-      
+
       // 需要用 fs 模来读取文件内容，而不是 require 和 import
       const fileContent = fs.readFileSync(path.resolve(filePath.substring(0, filePath.indexOf('/src/pages')), 'src/assets/js/track/pageMap.ts'), "utf8");
       // 页面埋点路径
@@ -108,6 +111,16 @@ function getWebviewContent(filePath: string) {
       } else {
         pageTrackName = 'loan_h5_' + shortPath.replace(/\//g, '_');
       }
+
+      // 使用了query参数的页面
+      const files = globSync(path.join(path.dirname(filePath), '**/*.ts{,x}'));
+      let index = 0;
+      files.forEach(item => {
+        if (fs.readFileSync(item, "utf8").includes('parseQuery')) {
+          index++;
+          fileWithQuery += `<div class="base">${index}、${item}</div>`;
+        }
+      });
     }
   }
   return `
@@ -163,7 +176,7 @@ function getWebviewContent(filePath: string) {
     </head>
     <body>
       <div style="display: ${display};margin-bottom: 24px;">
-        <div class="base">页面埋点名称: ${pageTrackName}</div>
+        <div class="base"><i>埋点名称: </i>${pageTrackName}</div>
         <div class="divider"></div>
         <div class="base"><i>dev: </i>${devPath}</div>
         <div class="base"><i>qa: </i>${qaPath}</div>
@@ -174,8 +187,9 @@ function getWebviewContent(filePath: string) {
         <div class="base"><i>qa容器: </i>${qaContainerPath}</div>
         <div class="base"><i>prod容器: </i>${prodContainerPath}</div>
         <div class="divider"></div>
-        <div class="base">若存在query参数请自行拼接</div>
-        <div class="base">query参数转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
+        <div class="base">${fileWithQuery ? "以下文件中存在query参数, 请自行拼接" : "该页面不存在query参数"}</div>
+        ${fileWithQuery}
+        <div class="base">转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
       </div>
 
       <input id="urlInput" type="text" placeholder="Enter a URL">
