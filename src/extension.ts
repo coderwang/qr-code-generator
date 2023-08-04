@@ -64,7 +64,8 @@ async function generateQRCode(text: string): Promise<string> {
 }
 
 function getWebviewContent(filePath: string) {
-  let display = 'none';
+  let outerDisplay = 'none';
+  let innerDisplay = 'none';
 
   let devPath = '';
   let devContainerPath = '';
@@ -84,12 +85,15 @@ function getWebviewContent(filePath: string) {
   // 通过右键打开
   if (filePath) {
     if (filePath.includes('mw-loan-h5')) {
+      outerDisplay = 'block';
+      innerDisplay = 'block';
+
       const devBaseUrl = 'https://devstatic.ymm56.com/microweb/#/mw-loan-h5/';
       const qaBaseUrl = 'https://qastatic.ymm56.com/microweb/#/mw-loan-h5/';
       const prodBaseUrl = 'https://static.ymm56.com/microweb/#/mw-loan-h5/';
 
-      display = 'block';
       const shortPath = filePath.substring(filePath.indexOf('/mw-loan-h5/src/pages') + 22, filePath.length - 4);
+      console.log('shortPath=====>', shortPath);
 
       // 新版路由地址
       newRoutePath = 'ymm://loan/h5/' + shortPath.replace(/\//g, '_').slice(0, -6);
@@ -111,6 +115,34 @@ function getWebviewContent(filePath: string) {
       } else {
         pageTrackName = 'loan_h5_' + shortPath.replace(/\//g, '_');
       }
+
+      // 使用了query参数的页面
+      const files = globSync(path.join(path.dirname(filePath), '**/*.ts{,x}'));
+      let index = 0;
+      files.forEach(item => {
+        if (fs.readFileSync(item, "utf8").includes('parseQuery')) {
+          index++;
+          fileWithQuery += `<div class="base">${index}、${item}</div>`;
+        }
+      });
+    }
+    if (filePath.includes('wx-loan-h5')) {
+      outerDisplay = 'block';
+
+      const devBaseUrl = 'https://devstatic.ymm56.com/wx-loan-h5/#/';
+      const qaBaseUrl = 'https://qastatic.ymm56.com/wx-loan-h5/#/';
+      const prodBaseUrl = 'https://static.ymm56.com/wx-loan-h5/#/';
+
+      const shortPath = filePath.substring(filePath.indexOf('/wx-loan-h5/src/pages') + 22, filePath.length - 10);
+      console.log('shortPath=====>', shortPath);
+
+      // 页面地址
+      devPath = devBaseUrl + shortPath;
+      qaPath = qaBaseUrl + shortPath;
+      prodPath = prodBaseUrl + shortPath;
+
+      // 页面埋点路径
+      pageTrackName = 'wx_loan_h5_' + shortPath.replace(/\//g, '_');
 
       // 使用了query参数的页面
       const files = globSync(path.join(path.dirname(filePath), '**/*.ts{,x}'));
@@ -175,21 +207,23 @@ function getWebviewContent(filePath: string) {
       </style>
     </head>
     <body>
-      <div style="display: ${display};margin-bottom: 24px;">
+      <div style="display: ${outerDisplay};margin-bottom: 24px;">
         <div class="base"><i>埋点名称: </i>${pageTrackName}</div>
         <div class="divider"></div>
         <div class="base"><i>dev: </i>${devPath}</div>
         <div class="base"><i>qa: </i>${qaPath}</div>
         <div class="base"><i>prod: </i>${prodPath}</div>
-        <div class="base"><i>新版路由: </i>${newRoutePath}</div>
+        <div style="display: ${innerDisplay};">
+          <div class="base"><i>新版路由: </i>${newRoutePath}</div>
+          <div class="divider"></div>
+          <div class="base"><i>dev容器: </i>${devContainerPath}</div>
+          <div class="base"><i>qa容器: </i>${qaContainerPath}</div>
+          <div class="base"><i>prod容器: </i>${prodContainerPath}</div>
+        </div>
         <div class="divider"></div>
-        <div class="base"><i>dev容器: </i>${devContainerPath}</div>
-        <div class="base"><i>qa容器: </i>${qaContainerPath}</div>
-        <div class="base"><i>prod容器: </i>${prodContainerPath}</div>
-        <div class="divider"></div>
-        <div class="base">${fileWithQuery ? "以下文件中存在query参数, 请自行拼接" : "该页面不存在query参数"}</div>
+        <div class="base">${fileWithQuery ? "以下文件中存在<i> query </i>参数, 请自行拼接" : "该页面不存在query参数"}</div>
         ${fileWithQuery}
-        <div class="base">转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
+        <div class="base" style="display: ${innerDisplay};">转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
       </div>
 
       <input id="urlInput" type="text" placeholder="Enter a URL">
