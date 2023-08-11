@@ -64,6 +64,8 @@ async function generateQRCode(text: string): Promise<string> {
 }
 
 function getWebviewContent(filePath: string) {
+  const defaultValue = 'https://www.baidu.com';
+
   let outerDisplay = 'none';
   let innerDisplay = 'none';
 
@@ -155,6 +157,7 @@ function getWebviewContent(filePath: string) {
       });
     }
   }
+
   return `
     <!DOCTYPE html>
     <html>
@@ -226,15 +229,15 @@ function getWebviewContent(filePath: string) {
         <div class="base" style="display: ${innerDisplay};">转换规则: <span>?</span>name<span>=</span>jack<span>&</span>age=18 👉🏻 <span>%3F</span>name<span>%3D</span>jack<span>%26</span>age%3D18</div>
       </div>
 
-      <input id="urlInput" type="text" placeholder="Enter a URL">
+      <input id="urlInput" value=${qaPath || defaultValue} type="text" placeholder="Enter a URL">
       <button onclick="generateQRCode()">Generate QR Code</button>
       <div id="qrCodeContainer"></div>
 
       <script>
         const vscode = acquireVsCodeApi();
+        const urlInput = document.getElementById('urlInput');
 
         function generateQRCode() {
-          const urlInput = document.getElementById('urlInput');
           const text = urlInput.value;
           vscode.postMessage({ command: 'generateQRCode', text });
         }
@@ -247,6 +250,15 @@ function getWebviewContent(filePath: string) {
             qrCodeContainer.innerHTML = \`<img src="\${message.imagePath}" alt="QR Code" />\`;
           }
         });
+
+        urlInput.addEventListener('keydown', event => {
+          if (event.key === 'Enter') {
+            generateQRCode();
+          }
+        })
+
+        // 自动调用一次
+        generateQRCode();
       </script>
     </body>
     </html>
