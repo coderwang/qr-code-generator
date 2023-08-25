@@ -78,6 +78,8 @@ function getWebviewContent(filePath: string) {
 
   let newRoutePath = '';
 
+  let transparentContainerPath = '';
+
   let pageTrackName = '';
 
   let fileWithQuery = '';
@@ -107,6 +109,9 @@ function getWebviewContent(filePath: string) {
       qaContainerPath = 'ymm://view/web?url=' + encodeURIComponent(qaPath);
       prodPath = prodBaseUrl + shortPath;
       prodContainerPath = 'ymm://view/web?url=' + encodeURIComponent(prodPath);
+
+      // 透明容器地址
+      transparentContainerPath = 'ymm://app/trans_mbweb?url=' + encodeURIComponent(prodPath);
 
       // 需要用 fs 模来读取文件内容，而不是 require 和 import
       const fileContent = fs.readFileSync(path.resolve(filePath.substring(0, filePath.indexOf('/src/pages')), 'src/assets/js/track/pageMap.ts'), "utf8");
@@ -222,6 +227,7 @@ function getWebviewContent(filePath: string) {
           <div class="base"><i>dev容器: </i>${devContainerPath}</div>
           <div class="base"><i>qa容器: </i>${qaContainerPath}</div>
           <div class="base"><i>prod容器: </i>${prodContainerPath}</div>
+          <div class="base"><i>prod透明容器: </i>${transparentContainerPath}</div>
         </div>
         <div class="divider"></div>
         <div class="base">${fileWithQuery ? "以下文件中存在<i> query </i>参数, 请自行拼接" : "该页面不存在query参数"}</div>
