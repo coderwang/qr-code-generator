@@ -73,9 +73,10 @@ async function generateQRCode(text: string): Promise<string> {
 
 function getWebviewContent(filePath: string, selectedText?: string) {
   // 如果有选中文本就使用选中文本，否则使用默认值
-  const defaultValue = selectedText || 'https://www.google.com';
+  const defaultValue = selectedText || vscode.workspace.getConfiguration("QRCodeGenerator").get("DefaultQRCodeUrl");
 
   console.log('filePath=====>', filePath);
+  console.log('defaultValue=====>', defaultValue);
 
   return `
     <!DOCTYPE html>
@@ -127,9 +128,13 @@ function getWebviewContent(filePath: string, selectedText?: string) {
       <script>
         const vscode = acquireVsCodeApi();
         const urlInput = document.getElementById('urlInput');
+        const qrCodeContainer = document.getElementById('qrCodeContainer');
 
         function generateQRCode() {
           const text = urlInput.value;
+          if(!text) {
+            qrCodeContainer.innerHTML = '';
+          }
           vscode.postMessage({ command: 'generateQRCode', text });
         }
 
@@ -155,7 +160,6 @@ function getWebviewContent(filePath: string, selectedText?: string) {
         window.addEventListener('message', event => {
           const message = event.data;
           if (message.command === 'showQRCode') {
-            const qrCodeContainer = document.getElementById('qrCodeContainer');
             qrCodeContainer.innerHTML = \`<img src="\${message.imagePath}" alt="QR Code" title="click to copy" onclick="copyToClipboard(this.src)" />\`;
           }
         });
@@ -168,7 +172,7 @@ function getWebviewContent(filePath: string, selectedText?: string) {
         })
 
         // 自动调用一次
-        generateQRCode();
+        "${defaultValue}" && generateQRCode();
       </script>
     </body>
     </html>

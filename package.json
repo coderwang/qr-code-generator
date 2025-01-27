@@ -9,7 +9,7 @@
     "二維碼",
     "erweima"
   ],
-  "version": "2.0.1",
+  "version": "2.1.0",
   "publisher": "coderwsh",
   "icon": "assets/icon.png",
   "repository": {
@@ -25,6 +25,17 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "QRCode Generator",
+      "properties": {
+        "QRCodeGenerator.DefaultQRCodeUrl": {
+          "type": "string",
+          "default": "https://www.google.com",
+          "description": "Default QRCode URL, it can be empty."
+        }
+      }
+    },
     "commands": [
       {
         "command": "extension.generateQRCode",
