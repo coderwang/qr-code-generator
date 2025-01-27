@@ -1,10 +1,10 @@
 # Change Log
 
 ## [2.0.0] - 2025-01-27
-### Breaking Change
+### ✨ Breaking Change
 - Provide a pure function for generating QR codes.
 
-`if you want to use the old version, please use the version 1.4.2`
+`If you want to use the old version, please use the version 1.4.2`
 
 ## [1.4.2] - 2023-08-25
 ### Added

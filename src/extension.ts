@@ -50,6 +50,12 @@ export function activate(context: vscode.ExtensionContext) {
           vscode.window.showWarningMessage('Please enter a URL.');
         }
       }
+      if (message.command === 'copySuccess') {
+        vscode.window.showInformationMessage('QR Code image copied to clipboard!');
+      }
+      if (message.command === 'copyError') {
+        vscode.window.showErrorMessage('Failed to copy QR Code to clipboard');
+      }
     });
   });
 
@@ -126,12 +132,30 @@ function getWebviewContent(filePath: string, selectedText?: string) {
           vscode.postMessage({ command: 'generateQRCode', text });
         }
 
+        async function copyToClipboard(dataUrl) {
+          try {
+            // 创建一个新的图片对象
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+            
+            // 创建 ClipboardItem 对象
+            const item = new ClipboardItem({ 'image/png': blob });
+            
+            // 写入剪贴板
+            await navigator.clipboard.write([item]);
+            vscode.postMessage({ command: 'copySuccess' });
+          } catch (error) {
+            console.error('Failed to copy:', error);
+            vscode.postMessage({ command: 'copyError' });
+          }
+        }
+
         // 监听插件发出的消息
         window.addEventListener('message', event => {
           const message = event.data;
           if (message.command === 'showQRCode') {
             const qrCodeContainer = document.getElementById('qrCodeContainer');
-            qrCodeContainer.innerHTML = \`<img src="\${message.imagePath}" alt="QR Code" />\`;
+            qrCodeContainer.innerHTML = \`<img src="\${message.imagePath}" alt="QR Code" title="click to copy" onclick="copyToClipboard(this.src)" />\`;
           }
         });
 
