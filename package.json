@@ -2,7 +2,7 @@
   "name": "qr-code-generator",
   "displayName": "QRCode Generator",
   "description": "Generate QR code in VS Code",
-  "version": "1.4.2",
+  "version": "2.0.0",
   "publisher": "coderwsh",
   "icon": "assets/icon.png",
   "repository": {
@@ -27,16 +27,9 @@
     "menus": {
       "editor/context": [
         {
-          "when": "resourcePath =~ /\\/src\\/pages\\// && !(resourcePath =~ /\\/components\\//) && resourceExtname == .tsx",
           "command": "extension.generateQRCode",
-          "group": "navigation"
-        }
-      ],
-      "explorer/context": [
-        {
-          "when": "resourcePath =~ /\\/src\\/pages\\// && !(resourcePath =~ /\\/components\\//) && resourceExtname == .tsx",
-          "command": "extension.generateQRCode",
-          "group": "navigation"
+          "group": "navigation",
+          "when": "editorHasSelection"
         }
       ]
     }

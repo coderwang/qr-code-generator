@@ -1,22 +1,16 @@
-## 支持功能
+## Usage
 
-- 生成页面路径
-- 根据路径生成二维码
-- 生成页面埋点名称
-- 生成新版路由地址
-- 新增使用了query参数的页面（需自行拼接）
-- 生成透明容器地址
+1. Select a text and right-click to choose `Generate QR Code`.
 
-## 使用方式
+![](./assets/example.png)
 
-1. 在资源管理器或编辑器中右键选择 Generate QR Code
-
-![](./assets/demonstrate.gif)
-
-2. 通过 shift + command + p 选择 Generate QR Code
+2. Hit `shift + command + p` to open the panel.
 
 ![](./assets/image.png)
 
-## 后续计划
+## Contact me
 
-1. ......
+If you have any questions or suggestions, please feel free to contact me.
+
+- Email: coderwsh@gmail.com
+- WeChat: `Java770880`
