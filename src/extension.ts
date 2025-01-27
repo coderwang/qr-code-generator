@@ -83,15 +83,19 @@ function getWebviewContent(filePath: string, selectedText?: string) {
     <head>
       <title>Generate QR Code</title>
       <style>
-        input { 
+        body {
+          text-align: center;
+        }
+        #urlInput { 
           width: 90%;
           padding: 12px; 
           font-size: 16px;
           border: none;
           outline: none;
           margin-bottom: 10px;
+          resize: none;
         }
-        input:focus {
+        #urlInput:focus {
           border: none;
           outline: none;
         }
@@ -116,7 +120,7 @@ function getWebviewContent(filePath: string, selectedText?: string) {
       </style>
     </head>
     <body>
-      <input id="urlInput" value=${defaultValue} type="text" placeholder="Enter a URL">
+      <textarea id="urlInput" rows="5" placeholder="Enter a URL">${defaultValue}</textarea>
       <button onclick="generateQRCode()">Generate QR Code</button>
       <div id="qrCodeContainer"></div>
 
@@ -158,6 +162,7 @@ function getWebviewContent(filePath: string, selectedText?: string) {
 
         urlInput.addEventListener('keydown', event => {
           if (event.key === 'Enter') {
+            event.preventDefault();
             generateQRCode();
           }
         })
