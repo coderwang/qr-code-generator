@@ -1,8 +1,5 @@
 import * as vscode from 'vscode';
 import * as qrcode from 'qrcode';
-import * as path from 'path';
-import * as fs from 'fs';
-import { globSync } from 'glob';
 
 export function activate(context: vscode.ExtensionContext) {
   let panel: vscode.WebviewPanel | undefined;
@@ -43,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
               // 生成二维码后，将二维码图片路径发送给Webview
               panel?.webview.postMessage({ command: 'showQRCode', imagePath: data });
             })
-            .catch((error) => {
+            .catch(() => {
               vscode.window.showErrorMessage('Failed to generate QR Code.');
             });
         } else {

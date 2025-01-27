@@ -2,7 +2,14 @@
   "name": "qr-code-generator",
   "displayName": "QRCode Generator",
   "description": "Generate QR code in VS Code",
-  "version": "2.0.0",
+  "keywords": [
+    "qrcode",
+    "qr",
+    "二维码",
+    "二維碼",
+    "erweima"
+  ],
+  "version": "2.0.1",
   "publisher": "coderwsh",
   "icon": "assets/icon.png",
   "repository": {
