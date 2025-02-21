@@ -75,9 +75,6 @@ function getWebviewContent(filePath: string, selectedText?: string) {
   // 如果有选中文本就使用选中文本，否则使用默认值
   const defaultValue = selectedText || vscode.workspace.getConfiguration("QRCodeGenerator").get("DefaultQRCodeUrl");
 
-  console.log('filePath=====>', filePath);
-  console.log('defaultValue=====>', defaultValue);
-
   return `
     <!DOCTYPE html>
     <html>
