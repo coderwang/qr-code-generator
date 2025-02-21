@@ -2,11 +2,11 @@
 
 Select a text and right-click to choose `Generate QR Code`, then you can see the QR code in the panel. And you can `copy` the QR code to the clipboard by clicking the QR code.
 
-![](./assets/example.png)
+![](./src/assets/example.png)
 
 Or hit `shift + command + p` to execute the command `Generate QR Code`.
 
-![](./assets/image.png)
+![](./src/assets/image.png)
 
 ## Configuration
 
