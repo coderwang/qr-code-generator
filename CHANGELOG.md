@@ -2,7 +2,7 @@
 
 ## [2.0.0] - 2025-01-27
 ### ✨ Breaking Change
-- Provide a pure function for generating QR codes.
+- This is a pure version for generating QR codes.
 
 `If you want to use the old version, please use the version 1.4.2`
 

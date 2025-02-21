@@ -8,7 +8,9 @@ Or hit `shift + command + p` to execute the command `Generate QR Code`.
 
 ![](./assets/image.png)
 
-You can also set the default QRCode URL in the `settings.json` file.
+## Configuration
+
+Use `QRCodeGenerator.DefaultQRCodeUrl` to set the default QRCode URL (it is `https://www.google.com` by default):
 
 ```json
 {
@@ -20,5 +22,5 @@ You can also set the default QRCode URL in the `settings.json` file.
 
 If you have any questions or suggestions, please feel free to contact me.
 
-- Email: coderwsh@gmail.com
+- Email: [coderwsh@gmail.com](mailto:coderwsh@gmail.com)
 - WeChat: `Java770880`
