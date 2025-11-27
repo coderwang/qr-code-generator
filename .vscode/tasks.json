@@ -6,7 +6,23 @@
 		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": "$tsc-watch",
+			"problemMatcher": {
+				"owner": "webpack",
+				"pattern": {
+					"regexp": "^\\s*(.*)\\((\\d+),(\\d+)\\):\\s+(warning|error)\\s+(.*):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"code": 5,
+					"message": 6
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^.*webpack.*\\s+compiling",
+					"endsPattern": "^.*webpack.*\\s+(compiled|failed)"
+				}
+			},
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never"
