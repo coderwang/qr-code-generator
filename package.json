@@ -25,17 +25,6 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "configuration": {
-      "type": "object",
-      "title": "QRCode Generator",
-      "properties": {
-        "QRCodeGenerator.DefaultQRCodeUrl": {
-          "type": "string",
-          "default": "https://www.google.com",
-          "description": "Default QRCode URL, it can be empty."
-        }
-      }
-    },
     "commands": [
       {
         "command": "extension.generateQRCode",

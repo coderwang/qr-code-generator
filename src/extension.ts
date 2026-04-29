@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import * as qrcode from 'qrcode';
 
+const LAST_QR_CODE_TEXT_KEY = 'lastQRCodeText';
+
 export function activate(context: vscode.ExtensionContext) {
   let panel: vscode.WebviewPanel | undefined;
 
@@ -9,7 +11,9 @@ export function activate(context: vscode.ExtensionContext) {
     const editor = vscode.window.activeTextEditor;
     // 获取选中的文本
     const selectedText = editor?.document.getText(editor.selection);
-    
+    // 读取上次生成二维码所用的文本
+    const lastText = context.globalState.get<string>(LAST_QR_CODE_TEXT_KEY, '');
+
     if (!panel) {
       // 创建一个Webview面板
       panel = vscode.window.createWebviewPanel(
@@ -28,13 +32,15 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }
 
-    // 获取Webview的HTML内容，传入选中的文本
-    panel.webview.html = getWebviewContent(uri?.path, selectedText);
+    // 获取Webview的HTML内容，优先使用选中文本，没有则使用上次缓存的文本
+    panel.webview.html = getWebviewContent(uri?.path, selectedText || lastText);
 
     // 监听Webview发出的消息
     panel.webview.onDidReceiveMessage((message) => {
       if (message.command === 'generateQRCode') {
         if (message.text) {
+          // 缓存本次用于生成二维码的文本
+          context.globalState.update(LAST_QR_CODE_TEXT_KEY, message.text);
           generateQRCode(message.text)
             .then((data) => {
               // 生成二维码后，将二维码图片路径发送给Webview
@@ -71,10 +77,7 @@ async function generateQRCode(text: string): Promise<string> {
   });
 }
 
-function getWebviewContent(filePath: string, selectedText?: string) {
-  // 如果有选中文本就使用选中文本，否则使用默认值
-  const defaultValue = selectedText || vscode.workspace.getConfiguration("QRCodeGenerator").get("DefaultQRCodeUrl");
-
+function getWebviewContent(filePath: string, defaultValue: string = '') {
   return `
     <!DOCTYPE html>
     <html>
