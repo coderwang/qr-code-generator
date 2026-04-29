@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
       panel = vscode.window.createWebviewPanel(
         'qrCodeGenerator',
         'QRCode Generator',
-        vscode.ViewColumn.Two, // 拆分编辑器
+        vscode.ViewColumn.Beside, // 拆分编辑器
         {
           enableScripts: true,
           retainContextWhenHidden: true,

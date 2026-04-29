@@ -23,4 +23,4 @@ Use `QRCodeGenerator.DefaultQRCodeUrl` to set the default QRCode URL (it is `htt
 If you have any questions or suggestions, please feel free to contact me.
 
 - Email: [coderwsh@gmail.com](mailto:coderwsh@gmail.com)
-- WeChat: `Java770880`
+- WeChat: `Cy6er_Kin9`
